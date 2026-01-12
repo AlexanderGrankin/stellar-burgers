@@ -74,18 +74,17 @@ export const registerUser = createAsyncThunk(
 export const checkUserAuth = createAsyncThunk(
   'user/checkUserAuth',
   async (_, { dispatch }) => {
-    const isTokenExists = () => localStorage.getItem('accessToken') !== null;
-    if (isTokenExists()) {
-      await getUserApi()
-        .then((user) => {
-          dispatch(setUser(user.user));
-        })
-        .finally(() => {
-          dispatch(setIsAuthChecked(true));
-        });
-    } else {
-      dispatch(setIsAuthChecked(true));
+    const accessToken = getCookie('accessToken');
+    if (accessToken) {
+      try {
+        const user = await getUserApi();
+        dispatch(setUser(user.user));
+      } catch (error) {
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
+      }
     }
+    dispatch(setIsAuthChecked(true));
   }
 );
 
