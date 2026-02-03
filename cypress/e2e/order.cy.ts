@@ -64,7 +64,17 @@ describe('Создание заказа', () => {
     cy.get('[data-cy=order_number]').contains('98917').should('exist');
 
     // Закрытие модалки при клике на крестик
-    // cy.get('[data-cy=modal-close-button]').click();
-    // cy.get('[data-cy=modal]').should('not.exist');
+    cy.get('[data-cy=modal-close-button]').click();
+    cy.get('[data-cy=modal]').should('not.exist');
+
+    // Очистка конструктора
+    cy.get('[data-cy="constructor_bun_top"]')
+      .should('contain.text', 'Выберите булки');
+
+    cy.get('[data-cy="constructor_bun_bottom"]')
+      .should('contain.text', 'Выберите булки');
+
+    cy.get('[data-cy="constructor-fillings"]')
+      .should('contain.text', 'Выберите начинку');
   })
 });
